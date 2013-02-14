@@ -30,6 +30,14 @@ describe sip do
     end
   end
 
+  describe ':permit' do
+      it "should allow valid ipv4 addresses" do
+        @resource[:permit] = "192.168.200.2"
+        @resource[:permit].should == "192.168.200.2"
+      end
+  end
+
+
 
 
 end
