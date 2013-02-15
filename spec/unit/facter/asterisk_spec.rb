@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'puppet'
+
 
 describe "Facter::Util::Fact" do
   before {

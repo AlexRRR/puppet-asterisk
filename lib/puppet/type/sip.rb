@@ -1,6 +1,8 @@
-
+$LOAD_PATH.unshift(File.join(File.dirname(__FILE__),"..",".."))
+require 'puppet/util/sip'
 
 Puppet::Type.newtype(:sip) do
+  include Puppet::Util::Sip
 
   @doc = <<-EOS
     This type allow to manage sip peers/users in asterisk from Puppet.
@@ -15,7 +17,9 @@ Puppet::Type.newtype(:sip) do
     If no type=user entry matches an inbound call, then a type=peer or type=friend will match if the hostname or IP address defined
     in host= matches.
   EOS
-  feature :callerid,
+  feature :callerid, "callerid"
+  #provider specific features
+  feature :astconf, "The provider provides astconf features."
 
   ensurable
 
@@ -30,7 +34,7 @@ Puppet::Type.newtype(:sip) do
     newvalues(:friend, :peer, :user)
   end
 
-  newproperty(:permit) do
+  newproperty(:permit, :required_features => :astconf) do
     desc <<-EOS
     IP address and network restriction
     EOS
