@@ -12,11 +12,22 @@ describe 'Puppet::Util::Sip' do
 
   before(:each) {resource}
 
-  describe 'validate ip' do
+  describe 'valid ip should can be used' do
     subject { resource }
-    a = subject
-  specify { subject.validate_ip('192.168.2.200').should == '192.168.2.200'}
-    #puts subject
+    specify { subject.validate_ip('192.168.2.200').should == '192.168.2.200'}
+    specify { subject.validate_ip('192.168.2.200/24').should == '192.168.2.0'}
+    specify { subject.validate_ip('0.0.0.0').should == '0.0.0.0'}
   end
+
+  describe 'invalid ip should be rejected' do
+    subject { resource }
+    it "should reject invalid IP address" do
+      expect  { subject.validate_ip('foobar')}.to raise_error(ArgumentError, "invalid IP address")
+    end
+  end
+
+
+
+
 
 end

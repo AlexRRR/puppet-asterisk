@@ -11,6 +11,9 @@ Puppet::Type.type(:sip).provide :astconf, :parent=> Puppet::Provider::Sip do
   has_feature :context
   has_feature :caller_id
 
+  #confine :exists => :asterisk_version
+  confine :true => true
+
   def insert
     debug 'Inserting rule %s' % resource[:name]
   end

@@ -21,10 +21,21 @@ Puppet::Type.newtype(:sip) do
   #provider specific features
   feature :astconf, "The provider provides astconf features."
 
-  ensurable
+  ensurable do
+    newvalue(:present) do
+      provider.insert
+    end
+
+    newvalue(:absent) do
+      provider.delete
+    end
+
+    defaultto :present
+  end
 
   newparam(:name) do
     desc "sip peer/user name"
+    isnamevar
   end
 
   newproperty(:type) do
@@ -36,8 +47,22 @@ Puppet::Type.newtype(:sip) do
 
   newproperty(:permit, :required_features => :astconf) do
     desc <<-EOS
-    IP address and network restriction
+    Allow the sip connection from the following subnet/host
     EOS
+
+    validate do |value|
+      @resource.validate_ip(value)
+    end
+  end
+
+  newproperty(:deny, :required_features => :astconf) do
+    desc <<-EOS
+    Deny the SIP connection from the following subnet/host
+    EOS
+
+    validate do |value|
+      @resource.validate_ip(value)
+    end
   end
 
 

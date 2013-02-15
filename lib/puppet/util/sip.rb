@@ -7,7 +7,7 @@ module Puppet::Util::Sip
         return ip.to_string
       end
     rescue
-      puts 'Invalid IP Address'
+      raise ArgumentError.new("invalid IP address")
       return nil
     end
   end

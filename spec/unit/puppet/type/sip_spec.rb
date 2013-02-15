@@ -30,15 +30,17 @@ describe sip do
     end
   end
 
-  describe ':permit' do
-      it "should allow valid ipv4 addresses" do
-        @resource[:permit] = "192.168.200.2"
-        @resource[:permit].should == "192.168.200.2"
-      end
+  [:permit,:deny].each do |rule|
+    describe "#{rule}" do
+        it "should allow valid ipv4 addresses" do
+          @resource[rule] = "192.168.200.2/32"
+          @resource[rule].should == "192.168.200.2/32"
+        end
 
-      #it "should deny invalid ipv4 addresses" do
-      #  lambda {@resource[:permit] = '192.300.200.1'}.should raise_error(Puppet::Error)
-      #end
+        it "should deny invalid ipv4 addresses" do
+          lambda {@resource[rule] = '192.300.200.1'}.should raise_error(Puppet::Error)
+        end
+    end
   end
 
 
