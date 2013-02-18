@@ -9,3 +9,5 @@ if puppetversion = ENV['PUPPET_GEM_VERSION']
 else
   gem 'puppet', :require => false
 end
+
+gem 'inifile'

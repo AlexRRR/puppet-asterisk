@@ -22,3 +22,25 @@ describe 'sip provider suitability' do
   end
 
 end
+describe 'sip provider' do
+  let(:provider) { Puppet::Type.type(:sip).provider(:astconf) }
+  let(:resource) {
+    Puppet::Type.type(:sip).new({
+                                         :name  => 'foobar',
+                                         :secret  => 'dark',
+                                     })
+  }
+
+
+
+  it 'should be able to get a list of existing SIP extensions' do
+    provider.instances.each do |extension|
+      puts extension
+      extension.should be_an_instance_of(provider)
+      #extension.properties[:provider].to_s.should == provider.name.to_s
+    end
+  end
+
+
+
+end
