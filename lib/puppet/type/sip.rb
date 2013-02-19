@@ -8,15 +8,6 @@ Puppet::Type.newtype(:sip) do
     This type allow to manage sip peers/users in asterisk from Puppet.
   EOS
 
-  feature :username, " If Asterisk is accepting SIP INVITE requests from a remote SIP client, this field specifies the user name for authentication"
-  feature :secret, "put a strong, unique password here instead"
-  feature :context, <<-EOS
-    If type=user, the Context for the inbound call from this SIP user definition.
-    If type=peer, the Context in the dialplan for outbound calls from this SIP peer definition.
-    If type=friend the context used for both inbound and outbound calls through the SIP entities definition.
-    If no type=user entry matches an inbound call, then a type=peer or type=friend will match if the hostname or IP address defined
-    in host= matches.
-  EOS
   feature :callerid, "callerid"
   #provider specific features
   feature :astconf, "The provider provides astconf features."
@@ -36,6 +27,24 @@ Puppet::Type.newtype(:sip) do
   newparam(:name) do
     desc "sip peer/user name"
     isnamevar
+  end
+
+  newparam(:username) do
+    desc "If Asterisk is accepting SIP INVITE requests from a remote SIP client, this field specifies the user name for authentication"
+  end
+
+  newparam(:secret) do
+    desc   "put a strong, unique password here"
+  end
+
+  newparam(:context) do
+    desc <<-EOS
+    If type=user, the Context for the inbound call from this SIP user definition.
+    If type=peer, the Context in the dialplan for outbound calls from this SIP peer definition.
+    If type=friend the context used for both inbound and outbound calls through the SIP entities definition.
+    If no type=user entry matches an inbound call, then a type=peer or type=friend will match if the hostname or IP address defined
+    in host= matches.
+    EOS
   end
 
   newproperty(:type) do

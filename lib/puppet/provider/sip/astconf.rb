@@ -10,10 +10,7 @@ Puppet::Type.type(:sip).provide :astconf, :parent=> Puppet::Provider::Sip do
   @doc = "Sip provider manages SIP config in from sip.conf file"
 
   has_feature :astconf
-  has_feature :username
-  has_feature :secret
-  has_feature :context
-  has_feature :caller_id
+
 
   confine :true => true
 
@@ -33,21 +30,26 @@ Puppet::Type.type(:sip).provide :astconf, :parent=> Puppet::Provider::Sip do
   end
 
   def exists?
-    properties[:ensure] != :absent
+    sip_conf = IniFile.load('spec/fixtures/simple.conf')
+    unless sip_conf.nil?
+      return sip_conf.has_section?(resource[:name])
+    end
+    return false
   end
 
   def self.instances
     debug "[instances]"
     puts Dir.pwd
+
     extensions = []
+
     sip_conf = IniFile.new(:filename => 'spec/fixtures/simple.conf')
+
     sip_conf.each_section do |sip|
       extensions << new(:name => sip, :secret => 'dark')
     end
     return extensions
-
-
-
   end
+
 
 end
