@@ -31,6 +31,10 @@ describe 'sip provider' do
                                      })
   }
 
+  before :each do
+    provider.stubs(:config_file).returns("spec/fixtures/simple.conf")
+  end
+
   it 'should be able to get a list of existing SIP extensions' do
     provider.instances.each do |extension|
       puts extension
@@ -41,9 +45,5 @@ describe 'sip provider' do
   it 'should be verify the existance of resource' do
     resource.provider.exists?().should be_true
   end
-
-
-
-
 
 end
