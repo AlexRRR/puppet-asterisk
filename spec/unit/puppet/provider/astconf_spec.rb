@@ -48,7 +48,7 @@ describe 'sip provider' do
     resource.provider.exists?().should be_true
   end
 
-  it 'should create an inifile from resource' do
+  it 'should be able to create an inifile from a resource' do
     ini = IniFile.load("spec/fixtures/simple.conf")
     a = resource.provider.resource_to_ini
     a.instance_variable_get(:@ini).should == ini.instance_variable_get(:@ini)

@@ -60,10 +60,9 @@ Puppet::Type.type(:sip).provide :astconf, :parent=> Puppet::Provider::Sip do
   end
 
   def resource_to_ini
-    puts "dope"
     entry = IniFile.new
     tmp = resource.original_parameters.clone
-    #inifile returns a string as keys, we should do the same.
+    #inifile returns keys as strings not symbols, we should do the same.
     tmp.keys.each do |key|
       tmp[(key.to_s rescue key) || key] = tmp.delete(key)
     end
