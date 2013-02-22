@@ -24,9 +24,8 @@ Puppet::Type.newtype(:sip) do
     defaultto :present
   end
 
-  newparam(:name) do
+  newparam(:name, :namevar => true) do
     desc "sip peer/user name"
-    isnamevar
   end
 
   newparam(:username) do

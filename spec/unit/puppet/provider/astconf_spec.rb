@@ -4,6 +4,7 @@ require 'spec_helper'
 require 'puppet'
 require 'puppet/provider/confine/exists'
 require 'puppet/type/sip'
+require 'inifile'
 
 describe 'sip provider suitability' do
   let(:exists) {
@@ -27,6 +28,7 @@ describe 'sip provider' do
   let(:resource) {
     Puppet::Type.type(:sip).new({
                                          :name  => 'foo',
+                                         :username => 'bar',
                                          :secret  => 'dark',
                                      })
   }
@@ -45,5 +47,12 @@ describe 'sip provider' do
   it 'should be verify the existance of resource' do
     resource.provider.exists?().should be_true
   end
+
+  it 'should create an inifile from resource' do
+    ini = IniFile.load("spec/fixtures/simple.conf")
+    a = resource.provider.resource_to_ini
+    a.instance_variable_get(:@ini).should == ini.instance_variable_get(:@ini)
+  end
+
 
 end

@@ -18,7 +18,8 @@ Puppet::Type.type(:sip).provide :astconf, :parent=> Puppet::Provider::Sip do
 
 
   def insert
-    debug 'Inserting rule %s' % resource[:name]
+    debug 'Inserting extension %s' % resource[:name]
+
   end
 
   def update
@@ -56,6 +57,18 @@ Puppet::Type.type(:sip).provide :astconf, :parent=> Puppet::Provider::Sip do
   #need to create this accessor method to be able to mock it and test easier. must find a better way.
   def self.config_file
     return '/etc/asterisk/sip.conf'
+  end
+
+  def resource_to_ini
+    puts "dope"
+    entry = IniFile.new
+    tmp = resource.original_parameters.clone
+    #inifile returns a string as keys, we should do the same.
+    tmp.keys.each do |key|
+      tmp[(key.to_s rescue key) || key] = tmp.delete(key)
+    end
+    entry[resource[:name]] = tmp
+    entry
   end
 
 
