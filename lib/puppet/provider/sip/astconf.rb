@@ -8,34 +8,48 @@ Puppet::Type.type(:sip).provide :astconf, :parent=> Puppet::Provider::Sip do
   include Puppet::Util::Sip
 
   @doc = "Sip provider manages SIP config in from sip.conf file"
-
   has_feature :astconf
-
-
   confine :true => true
 
-
-
-
-  def insert
-    debug 'Inserting extension %s' % resource[:name]
-
+  def create
+    debug 'Creating extension %s' % resource[:name]
+    ini = resource_to_ini
+    sip_conf = IniFile.load(self.class.config_file)
+    if sip_conf.nil?
+      ini.write(:filename => self.class.config_file)
+    else
+      sip_conf.merge(ini)
+      sip_conf.write(:filename => self.class.config_file)
+    end
   end
 
   def update
     debug 'Updating rule %s' % resource[:name]
+    pre =  IniFile.load(self.class.config_file)
+    ini = resource_to_ini
+    final = pre.merge(ini)
+    final.write(:filename => self.class.config_file)
   end
 
   def delete
     debug 'Deleting rule %s' % resource[:name]
+    pre =  IniFile.load(self.class.config_file)
+    pre.delete_section(resource[:name])
+    pre.write(:filename => self.class.config_file)
+  end
+
+  def flush
+    @property_hash.clear
   end
 
   def exists?
-    sip_conf = IniFile.load(self.class.config_file)
-    unless sip_conf.nil?
-      return sip_conf.has_section?(resource[:name])
-    end
-    return false
+    properties[:ensure] == :present
+
+    #sip_conf = IniFile.load(self.class.config_file)
+    #unless sip_conf.nil?
+    #  return sip_conf.has_section?(resource[:name])
+    #end
+    #return false
   end
 
   def self.instances
@@ -69,6 +83,8 @@ Puppet::Type.type(:sip).provide :astconf, :parent=> Puppet::Provider::Sip do
     entry[resource[:name]] = tmp
     entry
   end
+
+
 
 
 end

@@ -14,15 +14,14 @@ Puppet::Type.newtype(:sip) do
 
   ensurable do
     newvalue(:present) do
-      provider.insert
+      provider.create
     end
 
     newvalue(:absent) do
       provider.delete
     end
-
-    defaultto :present
   end
+
 
   newparam(:name, :namevar => true) do
     desc "sip peer/user name"

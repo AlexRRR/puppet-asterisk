@@ -44,11 +44,11 @@ describe 'sip provider' do
     end
   end
 
-  it 'should be verify the existance of resource' do
-    resource.provider.exists?().should be_true
-  end
+  #it 'should be verify the existance of resource' do
+  #  resource.provider.exists?().should be_true
+  #end
 
-  it 'should be able to create an inifile from a resource' do
+  it 'should be able to create an inifile object from a resource' do
     ini = IniFile.load("spec/fixtures/simple.conf")
     a = resource.provider.resource_to_ini
     a.instance_variable_get(:@ini).should == ini.instance_variable_get(:@ini)
@@ -56,3 +56,58 @@ describe 'sip provider' do
 
 
 end
+
+#describe 'sip creation' do
+#  let(:provider) { Puppet::Type.type(:sip).provider(:astconf) }
+#  let(:resource) {
+#    Puppet::Type.type(:sip).new({
+#                                    :name  => 'foo',
+#                                    :username => 'bar',
+#                                    :secret  => 'dark',
+#                                    :ensure => 'present'
+#                                })
+#  }
+#
+#  let(:resource_two) {
+#    Puppet::Type.type(:sip).new({
+#                                    :name  => 'honey',
+#                                    :username => 'bear',
+#                                    :secret  => 'now',
+#                                    :ensure => 'present'
+#                                })
+#  }
+#
+#  let (:instance) {
+#    provider.new(resource)
+#  }
+#  let (:instance_two) {
+#    provider.new(resource_two)
+#  }
+#  let (:test_file) {
+#    "spec/fixtures/write-simple.conf"
+#  }
+#
+#  before :each do
+#    provider.stubs(:config_file).returns(test_file)
+#  end
+#
+#  it 'should create a new file if it does not exist' do
+#    File.exists?(test_file) ? File.delete(test_file) : puts("nope")
+#    instance.create
+#    File.exists?(test_file).should be_true
+#  end
+#
+#  it 'should merge resource into existing config file' do
+#    instance_two.update
+#    sip_config = IniFile.load(test_file)
+#    (sip_config.has_section?(resource[:name]) && sip_config.has_section?(resource_two[:name])).should be_true
+#    File.delete(test_file)
+#
+#
+#
+#  end
+#
+#
+#
+#
+#end
