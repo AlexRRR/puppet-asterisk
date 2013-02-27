@@ -17,7 +17,7 @@ pickupgroup=1
 dtmfmode=rfc2833
 canreinvite=no
 permit=10.34.0.1/32
-deny=0.0.0.0/0
+deny=10.34.0.2/32
 </code></pre>
 
 Can be expressed as:
@@ -34,5 +34,28 @@ sip {'100':
     deny    => '10.34.0.2/32',
 }
 </code></pre>
+
+
+Testing
+-------
+
+Please make sure you have rake, rspec installed
+
+<pre><code>
+gem install rake
+gem install rspec
+</pre></code>
+
+Run the tests from root directory of project
+
+<pre><code>
+rake spec
+</pre></code>
+
+
+
+
+
+
 
 
