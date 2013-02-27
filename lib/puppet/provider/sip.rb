@@ -27,7 +27,4 @@ class Puppet::Provider::Sip < Puppet::Provider
     nil
   end
 
-
-
-
 end

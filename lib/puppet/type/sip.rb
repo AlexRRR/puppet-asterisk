@@ -8,7 +8,6 @@ Puppet::Type.newtype(:sip) do
     This type allow to manage sip peers/users in asterisk from Puppet.
   EOS
 
-  feature :callerid, "callerid"
   #provider specific features
   feature :astconf, "The provider provides astconf features."
 
@@ -71,16 +70,5 @@ Puppet::Type.newtype(:sip) do
       @resource.validate_ip(value)
     end
   end
-
-
-
-
-
-
-
-
-
-
-
 
 end

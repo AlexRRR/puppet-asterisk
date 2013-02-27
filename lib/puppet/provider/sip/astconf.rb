@@ -15,20 +15,15 @@ Puppet::Type.type(:sip).provide :astconf, :parent=> Puppet::Provider::Sip do
     debug 'Creating extension %s' % resource[:name]
     ini = resource_to_ini
     sip_conf = IniFile.load(self.class.config_file)
-    if sip_conf.nil?
+    if sip_conf.nil? || sip_conf.sections.empty?
+      debug "new file"
       ini.write(:filename => self.class.config_file)
     else
-      sip_conf.merge(ini)
-      sip_conf.write(:filename => self.class.config_file)
+      debug "Merging"
+      merged = sip_conf.merge(ini)
+      debug "Containing #{sip_conf}"
+      merged.write(:filename => self.class.config_file)
     end
-  end
-
-  def update
-    debug 'Updating rule %s' % resource[:name]
-    pre =  IniFile.load(self.class.config_file)
-    ini = resource_to_ini
-    final = pre.merge(ini)
-    final.write(:filename => self.class.config_file)
   end
 
   def delete
@@ -43,19 +38,21 @@ Puppet::Type.type(:sip).provide :astconf, :parent=> Puppet::Provider::Sip do
   end
 
   def exists?
+    debug '[checking for existance]'
     properties[:ensure] == :present
 
-    #sip_conf = IniFile.load(self.class.config_file)
-    #unless sip_conf.nil?
-    #  return sip_conf.has_section?(resource[:name])
-    #end
-    #return false
+    sip_conf = IniFile.load(self.class.config_file)
+    if sip_conf.nil?
+      return false
+    end
+    return sip_conf.has_section?(resource[:name])
   end
 
   def self.instances
     debug "[instances]"
     extensions =  []
     a = config_file
+    debug "[config file #{a} ]"
     sip_conf = IniFile.new(:filename => a)
     arg_config = Hash.new()
     sip_conf.each_section do |section|
@@ -67,6 +64,17 @@ Puppet::Type.type(:sip).provide :astconf, :parent=> Puppet::Provider::Sip do
     end
     return extensions
   end
+
+  def self.prefetch(resources)
+    debug "[prefetching...]"
+    extensions = instances
+    resources.keys.each do |name|
+      if provider = extensions.find{ |ext| ext.name == name}
+        resources[name].provider = provider
+      end
+    end
+  end
+
 
   #need to create this accessor method to be able to mock it and test easier. must find a better way.
   def self.config_file
@@ -81,10 +89,27 @@ Puppet::Type.type(:sip).provide :astconf, :parent=> Puppet::Provider::Sip do
       tmp[(key.to_s rescue key) || key] = tmp.delete(key)
     end
     entry[resource[:name]] = tmp
+    debug "#{entry}"
     entry
   end
 
 
+  #method_missing was broken by issue http://projects.puppetlabs.com/issues/10915
+  #must include this ugly fix
+  %w(permit deny).each do |property|
+    define_method "#{property}" do
+      debug "[setter for #{property}]"
+      @property_hash[property.to_sym]
+    end
+
+    define_method "#{property}=" do |value|
+      debug "[getter for #{property}]"
+      @property_hash[property.to_sym] = value
+      sip_conf = IniFile.load(self.class.config_file)
+      sip_conf[@property_hash[:name]][property.to_s] = value
+      sip_conf.write(:filename => self.class.config_file)
+    end
+  end
 
 
 end
