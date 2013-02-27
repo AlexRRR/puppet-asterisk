@@ -1,15 +1,6 @@
 class Puppet::Provider::Sip < Puppet::Provider
 
 
-  def self.prefetch(resources)
-    debug("[prefetch(resources)]")
-    instances.each do |prov|
-      if resource = resources[prov.name] || resources[prov.name.downcase]
-        resource.provider = prov
-      end
-    end
-  end
-
   def properties
     if @property_hash.empty?
       @property_hash = query || {:ensure => :absent}
