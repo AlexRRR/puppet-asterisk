@@ -28,8 +28,8 @@ sip {'100':
     type    => 'friend',
     host    => 'dynamic',
     secret  => 'MyPass123',
-    context => 'internal'
-    mailbox => '100@default'
+    context => 'full',
+    mailbox => '100@default',
     permit  => '10.34.0.1/32',
     deny    => '10.34.0.2/32',
 }
