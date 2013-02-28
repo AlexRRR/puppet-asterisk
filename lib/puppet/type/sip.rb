@@ -71,4 +71,14 @@ Puppet::Type.newtype(:sip) do
     end
   end
 
+  %w(accountcode allow disallow allowguest amaflags astdb auth callerid busylevel  callgroup callingpres canreinvite cid_number defaultip defaultuser
+  directrtpsetup dtmfmode fromuser fromdomain fullcontact fullname host incominglimiti outgoinglimit insecureipaddr language mailbox md5secret musicclass musiconhold
+  subscribemwi name nat outboundproxy mask
+  pickupgroup port progressinband promiscredir qualify regexten regseconds restrictcid rtpkeepalive rtptimeout rtpholdtimeout sendrpid setvar subscribecontext trunkname
+  trustrpid useclientcode usereqphone vmexten).each do |property|
+    newproperty(property.to_sym, :required_features => :astconf) do
+    end
+  end
+
+
 end

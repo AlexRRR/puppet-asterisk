@@ -96,14 +96,11 @@ Puppet::Type.type(:sip).provide :astconf, :parent=> Puppet::Provider::Sip do
 
   #method_missing was broken by issue http://projects.puppetlabs.com/issues/10915
   #must include this ugly fix
-  %w(accountcode allow disallow allowguest amaflagsastdbauth callerid busylevel
-  call-limit callgroup callingpres canreinvite cid_number context defaultip defaultuser
-  directrtpsetup dtmfmode fromuser fromdomain fullcontact fullname host incominglimitoutgoinglimit
-  insecureipaddrlanguagemailbox md5secretmusicclass musiconhold subscribemwiname nat outboundproxy
-  permitdenymaskpickupgroupportprogressinband promiscredir qualify regexten regseconds restrictcidrtpkeepalive
-  rtptimeout rtpholdtimeout secretsendrpid setvar subscribecontext trunknametrustrpid type
-  useclientcode usereqphone
-  username vmexten).each do |property|
+  %w(accountcode allow disallow allowguest amaflags astdb auth callerid busylevel callgroup callingpres canreinvite cid_number defaultip defaultuser
+  directrtpsetup dtmfmode fromuser fromdomain fullcontact fullname host incominglimiti outgoinglimit insecureipaddr language mailbox md5secret musicclass musiconhold
+  subscribemwi name nat outboundproxy mask
+  pickupgroup port progressinband promiscredir qualify regexten regseconds restrictcid rtpkeepalive rtptimeout rtpholdtimeout sendrpid setvar subscribecontext trunkname
+  trustrpid useclientcode usereqphone vmexten).each do |property|
     define_method "#{property}" do
       debug "[setter for #{property}]"
       @property_hash[property.to_sym]
