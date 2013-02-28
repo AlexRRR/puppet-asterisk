@@ -98,7 +98,7 @@ Puppet::Type.type(:sip).provide :astconf, :parent=> Puppet::Provider::Sip do
   #must include this ugly fix
   %w(accountcode allow disallow allowguest amaflags astdb auth callerid busylevel callgroup callingpres canreinvite cid_number defaultip defaultuser
   directrtpsetup dtmfmode fromuser fromdomain fullcontact fullname host incominglimiti outgoinglimit insecureipaddr language mailbox md5secret musicclass musiconhold
-  subscribemwi name nat outboundproxy mask
+  subscribemwi name nat outboundproxy permit deny mask
   pickupgroup port progressinband promiscredir qualify regexten regseconds restrictcid rtpkeepalive rtptimeout rtpholdtimeout sendrpid setvar subscribecontext trunkname
   trustrpid useclientcode usereqphone vmexten).each do |property|
     define_method "#{property}" do
