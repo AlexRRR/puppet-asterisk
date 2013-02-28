@@ -96,7 +96,15 @@ Puppet::Type.type(:sip).provide :astconf, :parent=> Puppet::Provider::Sip do
 
   #method_missing was broken by issue http://projects.puppetlabs.com/issues/10915
   #must include this ugly fix
-  %w(permit deny).each do |property|
+  %w(allowsubscribe  allow  disallow  allowguest  autocreatepeer  bindaddr
+    bindport  callerid  canreinvite  context  defaultexpiry domain  dtmfmode
+    dumphistory  externip  externhost  externrefresh  ignoreregexpire  jbenable  jbforce
+    jbmaxsize  jbresyncthreshold  jbimpl  jblog  language  limitonpeers  localnet  fromdomain insecure
+    maxexpiry  musicclass  musdiconhold  nat  notifymimetype  notifyringing  outboundproxy  outboundproxyport
+    pedantic  port  progressinband  promiscredir qualify  realm  recordhistory  regcontext  register  registerattempts
+    registertimeout  relaxdtmf  rtautoclear  rtcachefriends  rtsavesysname  rtpholdtimeout  rtpkeepalive  rtptimeout
+    rtupdate  sendrpid  sipdebug  srvlookup  tos  trustrpid  useclientcode  usereqphone  useragent  videosupport
+    vmexten  callevents  disallowed_methods preferred_codec_only engine).each do |property|
     define_method "#{property}" do
       debug "[setter for #{property}]"
       @property_hash[property.to_sym]
