@@ -13,17 +13,6 @@ Puppet::Type.type(:sip).provide :astconf, :parent=> Puppet::Provider::Sip do
 
   def create
     debug 'Creating extension %s' % resource[:name]
-    ini = resource_to_ini
-    sip_conf = IniFile.load(self.class.config_file)
-    if sip_conf.nil? || sip_conf.sections.empty?
-      debug "new file"
-      ini.write(:filename => self.class.config_file)
-    else
-      debug "Merging"
-      merged = sip_conf.merge(ini)
-      debug "Containing #{sip_conf}"
-      merged.write(:filename => self.class.config_file)
-    end
   end
 
   def delete
@@ -34,6 +23,17 @@ Puppet::Type.type(:sip).provide :astconf, :parent=> Puppet::Provider::Sip do
   end
 
   def flush
+    ini = resource_to_ini
+    sip_conf = IniFile.load(self.class.config_file)
+    if sip_conf.nil? || sip_conf.sections.empty?
+      debug "[new file]"
+      ini.write(:filename => self.class.config_file)
+    else
+      debug "[Merging]"
+      merged = sip_conf.merge(ini)
+      debug "Containing #{sip_conf}"
+      merged.write(:filename => self.class.config_file)
+    end
     @property_hash.clear
   end
 
@@ -96,22 +96,20 @@ Puppet::Type.type(:sip).provide :astconf, :parent=> Puppet::Provider::Sip do
 
   #method_missing was broken by issue http://projects.puppetlabs.com/issues/10915
   #must include this ugly fix
-  %w(accountcode allow disallow allowguest amaflags astdb auth callerid busylevel callgroup callingpres canreinvite cid_number defaultip defaultuser
+  %w(accountcode allow disallow allowguest amaflags astdb auth callerid busylevel callgroup callingpres canreinvite cid_number context defaultip defaultuser
   directrtpsetup dtmfmode fromuser fromdomain fullcontact fullname host incominglimiti outgoinglimit insecureipaddr language mailbox md5secret musicclass musiconhold
   subscribemwi name nat outboundproxy permit deny mask
-  pickupgroup port progressinband promiscredir qualify regexten regseconds restrictcid rtpkeepalive rtptimeout rtpholdtimeout sendrpid setvar subscribecontext trunkname
-  trustrpid type useclientcode usereqphone vmexten).each do |property|
+  pickupgroup port progressinband promiscredir qualify regexten regseconds restrictcid rtpkeepalive rtptimeout rtpholdtimeout secret sendrpid setvar subscribecontext trunkname
+  trustrpid type useclientcode usereqphone username vmexten).each do |property|
     define_method "#{property}" do
-      debug "[setter for #{property}]"
+      debug "[getter for #{property}]"
       @property_hash[property.to_sym]
     end
 
     define_method "#{property}=" do |value|
-      debug "[getter for #{property}]"
+      debug "[setter for #{property}]"
       @property_hash[property.to_sym] = value
-      sip_conf = IniFile.load(self.class.config_file)
-      sip_conf[@property_hash[:name]][property.to_s] = value
-      sip_conf.write(:filename => self.class.config_file)
+
     end
   end
 

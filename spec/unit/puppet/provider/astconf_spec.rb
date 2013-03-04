@@ -93,12 +93,12 @@ describe 'sip creation' do
 
   it 'should create a new file if it does not exist' do
     File.exists?(test_file) ? File.delete(test_file) : puts("nope")
-    instance.create
+    instance.flush
     File.exists?(test_file).should be_true
   end
 
   it 'should merge resource into existing config file' do
-    instance_two.create
+    instance_two.flush
     sip_config = IniFile.load(test_file)
     (sip_config.has_section?(resource[:name]) && sip_config.has_section?(resource_two[:name])).should be_true
     File.delete(test_file)

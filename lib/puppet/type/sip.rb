@@ -26,23 +26,7 @@ Puppet::Type.newtype(:sip) do
     desc "sip peer/user name"
   end
 
-  newparam(:username) do
-    desc "If Asterisk is accepting SIP INVITE requests from a remote SIP client, this field specifies the user name for authentication"
-  end
 
-  newparam(:secret) do
-    desc   "put a strong, unique password here"
-  end
-
-  newparam(:context) do
-    desc <<-EOS
-    If type=user, the Context for the inbound call from this SIP user definition.
-    If type=peer, the Context in the dialplan for outbound calls from this SIP peer definition.
-    If type=friend the context used for both inbound and outbound calls through the SIP entities definition.
-    If no type=user entry matches an inbound call, then a type=peer or type=friend will match if the hostname or IP address defined
-    in host= matches.
-    EOS
-  end
 
   newproperty(:type) do
     desc <<-EOS
@@ -71,11 +55,11 @@ Puppet::Type.newtype(:sip) do
     end
   end
 
-  %w(accountcode allow disallow allowguest amaflags astdb auth callerid busylevel  callgroup callingpres canreinvite cid_number defaultip defaultuser
+  %w(accountcode allow disallow allowguest amaflags astdb auth callerid busylevel callgroup callingpres canreinvite cid_number context defaultip defaultuser
   directrtpsetup dtmfmode fromuser fromdomain fullcontact fullname host incominglimiti outgoinglimit insecureipaddr language mailbox md5secret musicclass musiconhold
-  subscribemwi name nat outboundproxy mask
-  pickupgroup port progressinband promiscredir qualify regexten regseconds restrictcid rtpkeepalive rtptimeout rtpholdtimeout sendrpid setvar subscribecontext trunkname
-  trustrpid useclientcode usereqphone vmexten).each do |property|
+  subscribemwi nat outboundproxy  mask
+  pickupgroup port progressinband promiscredir qualify regexten regseconds restrictcid rtpkeepalive rtptimeout rtpholdtimeout secret sendrpid setvar subscribecontext trunkname
+  trustrpid useclientcode usereqphone username vmexten).each do |property|
     newproperty(property.to_sym, :required_features => :astconf) do
     end
   end
